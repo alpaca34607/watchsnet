@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>華鉅 WATCHSNET | 企業作戰整合方案</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=Noto+Sans+TC:wght@300;500;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Keania+One&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #02060c;
+        --primary-blue: #00f0ff;
+        --secondary-blue: #0077ff;
+        --accent-orange: #ffaa00; /* 加入一點原品牌的橘金色作為點綴 */
+        --glass-bg: rgba(10, 20, 40, 0.7);
+        --glass-border: rgba(0, 240, 255, 0.2);
+        --text-main: #ffffff;
+        --text-muted: #8b9bb4;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Inter", "Noto Sans TC", sans-serif;
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+      }
+
+      /* --- Common Backgrounds --- */
+      .aura-background-component {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -10;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .aura-background-component > div {
+        position: absolute;
+        width: 100% !important;
+        height: 100% !important;
+        left: 0;
+        top: 0;
+        z-index: -10;
+      }
+
+      .aura-background-component canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
+
+      .aura-background-component [data-us-text] {
+        z-index: 1;
+      }
+
+      .aura-bg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw;
+        height: 80vh;
+        background: radial-gradient(
+          circle,
+          rgba(0, 119, 255, 0.15) 0%,
+          rgba(0, 0, 0, 0) 70%
+        );
+        filter: blur(60px);
+        z-index: -1;
+        animation: pulseAura 8s infinite alternate;
+      }
+
+      .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(0, 240, 255, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: -1;
+        mask-image: radial-gradient(
+          circle at center,
+          black 40%,
+          transparent 100%
+        );
+      }
+
+      @keyframes pulseAura {
+        0% {
+          transform: translate(-50%, -50%) scale(0.9);
+          opacity: 0.6;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1.1);
+          opacity: 1;
+        }
+      }
+
+      /* --- Phase 1: Entry Loading --- */
+      #intro-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 100;
+        background: #000;
+        transition: opacity 1s ease;
+      }
+
+      .loader-text {
+        font-family: "Cinzel", serif;
+        letter-spacing: 5px;
+        color: var(--primary-blue);
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px var(--primary-blue);
+      }
+
+      .loader-bar {
+        width: 200px;
+        height: 2px;
+        background: #1a1a1a;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .loader-progress {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0%;
+        background: var(--primary-blue);
+        box-shadow: 0 0 10px var(--primary-blue);
+        animation: loadProgress 2s ease-in-out forwards;
+      }
+
+      @keyframes loadProgress {
+        0% {
+          width: 0%;
+        }
+        50% {
+          width: 40%;
+        }
+        100% {
+          width: 100%;
+        }
+      }
+
+      /* --- Phase 2: Quiz Dashboard --- */
+      #quiz-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) translateY(50px);
+        width: 90%;
+        max-width: 600px;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        z-index: 50;
+      }
+
+      #quiz-container.active {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(0);
+        pointer-events: auto;
+      }
+
+      .dashboard-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+          inset 0 0 20px rgba(0, 240, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .scan-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary-blue);
+        opacity: 0.3;
+        animation: scan 3s linear infinite;
+      }
+
+      @keyframes scan {
+        0% {
+          top: 0%;
+        }
+        100% {
+          top: 100%;
+        }
+      }
+
+      .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 15px;
+      }
+
+      .system-status {
+        font-size: 0.8rem;
+        color: var(--primary-blue);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .timer-display {
+        font-family: "Keania One", sans-serif;
+        font-weight: 400;
+        color: var(--primary-blue);
+        font-size: 2rem;
+      }
+
+      .question-text {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        line-height: 1.6;
+        font-weight: 500;
+      }
+
+      .options-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .option-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 15px 20px;
+        color: var(--text-muted);
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+      }
+
+      .option-btn:hover {
+        background: rgba(0, 240, 255, 0.1);
+        border-color: var(--primary-blue);
+        color: #fff;
+      }
+
+      .option-btn.selected {
+        background: rgba(0, 240, 255, 0.2);
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 15px var(--primary-blue);
+        color: #fff;
+        transform: scale(1.02);
+      }
+
+      .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background: var(--primary-blue);
+        width: 100%;
+        transition: width 1s linear;
+      }
+
+      /* --- Phase 3: Transition Message --- */
+      #transition-msg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 60;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 1s ease;
+        text-align: center;
+      }
+
+      #transition-msg.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .trap-text {
+        font-family: "Noto Sans TC", sans-serif;
+        font-size: 2rem;
+        color: #fff;
+        margin-bottom: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease 0.5s;
+      }
+
+      .brand-solution {
+        font-size: 1.2rem;
+        color: var(--primary-blue);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease 1.5s;
+      }
+
+      #transition-msg.active .trap-text,
+      #transition-msg.active .brand-solution {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* --- Phase 4: Main Home Page (Updated Text) --- */
+      #main-home {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 1.5s ease;
+        z-index: 40;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+      }
+
+      #main-home.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Logo Area */
+      .brand-logo {
+        position: absolute;
+        top: 40px;
+        left: 50px;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+        color: #fff;
+      }
+      .brand-logo span {
+        color: var(--accent-orange);
+      }
+
+      /* Top Right Utils */
+      .top-utils {
+        position: absolute;
+        top: 40px;
+        right: 50px;
+        display: flex;
+        gap: 20px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+      .top-utils span {
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .top-utils span:hover {
+        color: #fff;
+      }
+
+      /* Navigation */
+      .nav-bar {
+        position: absolute;
+        top: 40px;
+        display: flex;
+        gap: 30px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 12px 30px;
+        border-radius: 30px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-item {
+        position: relative;
+        overflow: hidden;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: 0.3s;
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0%;
+          height: 2px;
+          background: var(--primary-blue);
+          box-shadow: 0 0 10px var(--primary-blue);
+          transition: width 0.3s ease, box-shadow 0.3s ease;
+        }
+        &:hover::after {
+          width: 100%;
+        }
+      }
+
+      .nav-item:hover {
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+      .nav-active {
+        color: #fff;
+        border-bottom: 1px solid var(--primary-blue);
+        padding-bottom: 2px;
+      }
+
+      /* Hero Content */
+      .hero-title {
+        font-family: "Titillium Web", sans-serif;
+        font-weight: 600;
+        font-size: 3.5rem;
+        color: #fff;
+        margin-bottom: 15px;
+        line-height: 1.2;
+      }
+
+      .hero-title em {
+        font-style: normal;
+        background: linear-gradient(90deg, #fff 0%, var(--accent-orange) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero-subtitle-en {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-blue);
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      .hero-subtitle-cn {
+        font-size: 2rem;
+        font-weight: 500;
+        color: #fff;
+        margin-bottom: 40px;
+        letter-spacing: 2px;
+        text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+      }
+
+      /* Bottom Tagline Bar */
+      .bottom-tagline {
+        position: absolute;
+        bottom: 50px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px 40px;
+        border-radius: 4px;
+        border-left: 3px solid var(--primary-blue);
+        font-size: 1rem;
+        color: #ccc;
+        letter-spacing: 2px;
+        backdrop-filter: blur(5px);
+        margin-bottom: 20px;
+      }
+
+      .bottom-tagline span {
+        color: var(--primary-blue);
+        font-weight: bold;
+        margin-right: 10px;
+      }
+
+      .cta-group {
+        display: flex;
+        gap: 20px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+        border: 1px solid var(--primary-blue);
+        color: #fff;
+        padding: 15px 40px;
+        border-radius: 4px; /* More corporate sharp edges */
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        transition: 0.3s;
+      }
+
+      .btn-primary:hover {
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+        background: var(--primary-blue);
+        color: #000;
+      }
+      .tech-deco {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .deco-text {
+        position: absolute;
+        font-size: 0.7rem;
+        color: var(--primary-blue);
+        opacity: 0.5;
+        letter-spacing: 2px;
+      }
+
+      .deco-item {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .deco-item .deco-text {
+        position: relative;
+        font-size: 0.75rem;
+        font-family: monospace;
+        color: var(--primary-blue);
+        opacity: 0.8;
+        letter-spacing: 0.2em;
+        margin-bottom: 0.25rem;
+      }
+
+      .deco-line {
+        height: 1px;
+        width: 3rem;
+        background: linear-gradient(to left, var(--primary-blue) 80%, transparent);
+      }
+      .deco-line-reverse {
+        height: 1px;
+        width: 3rem;
+        background: linear-gradient(to right, var(--primary-blue) 80%, transparent);
+      }
+
+      /* Shiny CTA Button Styles */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap");
+      @property --gradient-angle {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+      }
+      @property --gradient-angle-offset {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+      }
+      @property --gradient-percent {
+        syntax: "<percentage>";
+        initial-value: 20%;
+        inherits: false;
+      }
+      @property --gradient-shine {
+        syntax: "<color>";
+        initial-value: #84b1ff;
+        inherits: false;
+      }
+      .shiny-cta {
+        --gradient-angle: 0deg;
+        --gradient-angle-offset: 0deg;
+        --gradient-percent: 20%;
+        --gradient-shine: #84a7ff;
+        --shadow-size: 2px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 9999px;
+        padding: 1.25rem 2.5rem;
+        font-size: 1.125rem;
+        line-height: 1.2;
+        font-weight: 500;
+        color: #ffffff;
+        background: linear-gradient(#000000, #000000) padding-box,
+          conic-gradient(
+              from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+              transparent 0%,
+              #1dafd8 5%,
+              var(--gradient-shine) 15%,
+              #1dafd8 30%,
+              transparent 40%,
+              transparent 100%
+            )
+            border-box;
+        border: 2px solid transparent;
+        box-shadow: inset 0 0 0 1px #1a1818;
+        outline: none;
+        transition: --gradient-angle-offset 800ms cubic-bezier(0.25, 1, 0.5, 1),
+          --gradient-percent 800ms cubic-bezier(0.25, 1, 0.5, 1),
+          --gradient-shine 800ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s;
+        cursor: pointer;
+        isolation: isolate;
+        outline-offset: 4px;
+        font-family: "Inter", "Helvetica Neue", sans-serif;
+        z-index: 0;
+        animation: border-spin 2.5s linear infinite;
+      }
+      @keyframes border-spin {
+        to {
+          --gradient-angle: 360deg;
+        }
+      }
+      .shiny-cta:active {
+        transform: translateY(1px);
+      }
+      .shiny-cta::before {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        --size: calc(100% - 6px);
+        --position: 2px;
+        --space: 4px;
+        width: var(--size);
+        height: var(--size);
+        background: radial-gradient(
+            circle at var(--position) var(--position),
+            white 0.5px,
+            transparent 0
+          )
+          padding-box;
+        background-size: var(--space) var(--space);
+        background-repeat: space;
+        mask-image: conic-gradient(
+          from calc(var(--gradient-angle) + 45deg),
+          black,
+          transparent 10% 90%,
+          black
+        );
+        border-radius: inherit;
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      .shiny-cta::after {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        width: 100%;
+        aspect-ratio: 1;
+        background: linear-gradient(-50deg, transparent, #1dafd8, transparent);
+        mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+        opacity: 0.6;
+        animation: shimmer 4s linear infinite;
+        animation-play-state: running;
+      }
+      .shiny-cta span {
+        position: relative;
+        z-index: 2;
+        display: inline-block;
+      }
+      .shiny-cta span::before {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+        --size: calc(100% + 1rem);
+        width: var(--size);
+        height: var(--size);
+        box-shadow: inset 0 -1ex 2rem 4px #1dafd8;
+        opacity: 0;
+        border-radius: inherit;
+        transition: opacity 800ms cubic-bezier(0.25, 1, 0.5, 1);
+        animation: breathe 4.5s linear infinite;
+      }
+      @keyframes shimmer {
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.2);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Unicorn Studio Background Banner -->
+    <!-- Unicorn Studio Background Banner -->
+    <div class="aura-background-component">
+      <div
+        data-us-project="DoOd3Go3n2GfFUD6kVn8"
+        style="width: 100%; height: 100%"
+      ></div>
+    </div>
+
+    <div class="aura-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <div id="intro-layer">
+      <div class="loader-text">WATCHSNET SECURITY</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+    </div>
+
+    <div id="quiz-container">
+      <div class="dashboard-card">
+        <div class="scan-line"></div>
+        <div class="question-header">
+          <span class="system-status">SYSTEM CHECK: ACTIVE</span>
+          <span class="timer-display">00:10</span>
+        </div>
+        <div id="quiz-content">
+          <h3 class="question-text">Loading protocol...</h3>
+          <div class="options-grid" id="options-holder"></div>
+        </div>
+        <div class="progress-bar" id="timer-bar" style="width: 100%"></div>
+      </div>
+    </div>
+
+    <div id="transition-msg">
+      <div>
+        <h1 class="trap-text">你已經落入圈套</h1>
+        <p class="brand-solution">
+          讓
+          <span style="color: var(--primary-blue); font-weight: bold"
+            >華鉅 WATCHNET</span
+          >
+          將您從勒索解救
+        </p>
+      </div>
+    </div>
+
+    <div id="main-home">
+      <div class="brand-logo">WATCH<span>NET</span></div>
+
+      <div class="top-utils">
+        <span>聯絡我們</span>
+        <span>下載專區</span>
+        <span>經銷商系統</span>
+      </div>
+
+      <nav class="nav-bar">
+        <a href="#" class="nav-item">關於華鉅</a>
+        <a href="#" class="nav-item">解決方案</a>
+        <a href="#" class="nav-item">合作案例</a>
+        <a href="#" class="nav-item">最新消息</a>
+        <a href="#" class="nav-item">共契專區</a>
+      </nav>
+
+      <h1 class="hero-title">Innovation For <em>Better Business !</em></h1>
+      <h2 class="hero-subtitle-en">Smarter · Safer · Faster</h2>
+      <p class="hero-subtitle-cn">企業作戰，最快速行動整合方案</p>
+
+      <div class="cta-group">
+        <button class="shiny-cta focus:outline-none">
+          <span>立即諮詢</span>
+        </button>
+      </div>
+      <div class="tech-deco">
+        <div class="deco-item" style="top: 30%; left: 10%">
+          <span class="deco-text">INTELLIGENCE</span>
+          <div class="deco-line"></div>
+        </div>
+        <div
+          class="deco-item"
+          style="top: 40%; left: 20%; align-items: flex-start"
+        >
+          <span class="deco-text">SECURITY</span>
+          <div class="deco-line-reverse"></div>
+        </div>
+        <div class="deco-item" style="bottom: 10%; right: 10%">
+          <span class="deco-text">CONVENIENT</span>
+          <div class="deco-line"></div>
+        </div>
+      </div>
+
+      <div class="bottom-tagline">
+        <span>智安視界 · 影領未來</span> | 資安 · AI · 影像辨識
+      </div>
+    </div>
+
+    <script>
+      // Data Configuration (Same as before)
+      const questions = [
+        {
+          q: "收到一封標題為「緊急：您的帳戶即將被鎖定」的郵件，並附帶一個連結，您會？",
+          options: [
+            "立即點擊連結確認狀況",
+            "檢查寄件人地址是否正確",
+            "轉發給同事詢問意見",
+          ],
+        },
+        {
+          q: "為了方便記憶，公司內部的伺服器密碼，您傾向設定為？",
+          options: [
+            "公司統編加上當年生份",
+            "包含大小寫、符號的無意義字串",
+            "與個人社群帳號相同的密碼",
+          ],
+        },
+        {
+          q: "電腦跳出「系統更新」通知，但工作正忙，您通常會？",
+          options: [
+            "選擇「稍後提醒」直到下班",
+            "忽略它，舊版本比較穩定",
+            "立即存檔並執行更新",
+          ],
+        },
+      ];
+
+      let currentQIndex = 0;
+      let timerInterval;
+      const questionTime = 10;
+      let timeLeft = questionTime;
+
+      const introLayer = document.getElementById("intro-layer");
+      const quizContainer = document.getElementById("quiz-container");
+      const qText = document.querySelector(".question-text");
+      const optionsHolder = document.getElementById("options-holder");
+      const timerDisplay = document.querySelector(".timer-display");
+      const timerBar = document.getElementById("timer-bar");
+      const transitionMsg = document.getElementById("transition-msg");
+      const mainHome = document.getElementById("main-home");
+
+      // Logic
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          introLayer.style.opacity = "0";
+          setTimeout(() => {
+            introLayer.style.display = "none";
+            startQuiz();
+          }, 1000);
+        }, 2000);
+      });
+
+      function startQuiz() {
+        quizContainer.classList.add("active");
+        loadQuestion(currentQIndex);
+      }
+
+      function loadQuestion(index) {
+        if (index >= questions.length) {
+          endQuiz();
+          return;
+        }
+        const data = questions[index];
+        qText.innerText = data.q;
+        optionsHolder.innerHTML = "";
+        timeLeft = questionTime;
+        updateTimerVisuals();
+        startTimer();
+
+        data.options.forEach((opt) => {
+          const btn = document.createElement("div");
+          btn.className = "option-btn";
+          btn.innerText = opt;
+          btn.onclick = () => handleSelection(btn);
+          optionsHolder.appendChild(btn);
+        });
+      }
+
+      function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          updateTimerVisuals();
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            handleTimeOut();
+          }
+        }, 1000);
+      }
+
+      function updateTimerVisuals() {
+        timerDisplay.innerText = `00:${timeLeft.toString().padStart(2, "0")}`;
+        const percentage = (timeLeft / questionTime) * 100;
+        timerBar.style.width = `${percentage}%`;
+      }
+
+      function handleSelection(selectedBtn) {
+        clearInterval(timerInterval);
+        const allBtns = document.querySelectorAll(".option-btn");
+        allBtns.forEach((b) => (b.style.pointerEvents = "none"));
+        selectedBtn.classList.add("selected");
+        setTimeout(() => {
+          currentQIndex++;
+          loadQuestion(currentQIndex);
+        }, 800);
+      }
+
+      function handleTimeOut() {
+        const allBtns = document.querySelectorAll(".option-btn");
+        allBtns.forEach((b) => (b.style.pointerEvents = "none"));
+        setTimeout(() => {
+          currentQIndex++;
+          loadQuestion(currentQIndex);
+        }, 500);
+      }
+
+      function endQuiz() {
+        quizContainer.classList.remove("active");
+        transitionMsg.classList.add("active");
+        setTimeout(() => {
+          transitionMsg.classList.remove("active");
+          setTimeout(() => {
+            transitionMsg.style.display = "none";
+            mainHome.classList.add("active");
+          }, 1000);
+        }, 4000);
+      }
+    </script>
+
+    <!-- Unicorn Studio Script -->
+    <script type="text/javascript">
+      !(function () {
+        if (!window.UnicornStudio) {
+          window.UnicornStudio = { isInitialized: !1 };
+          var i = document.createElement("script");
+          (i.src =
+            "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.2/dist/unicornStudio.umd.js"),
+            (i.onload = function () {
+              window.UnicornStudio.isInitialized ||
+                (UnicornStudio.init(),
+                (window.UnicornStudio.isInitialized = !0));
+            }),
+            (document.head || document.body).appendChild(i);
+        }
+      })();
+    </script>
+  </body>
+</html>
