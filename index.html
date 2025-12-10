@@ -107,15 +107,15 @@
         width: 100%;
         height: 100%;
         background-image: linear-gradient(
-            rgba(0, 240, 255, 0.03) 1px,
+            rgba(0, 240, 255, 0.09) 1px,
             transparent 1px
           ),
-          linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+          linear-gradient(90deg, rgba(0, 240, 255, 0.09) 1px, transparent 1px);
         background-size: 50px 50px;
         z-index: -1;
         mask-image: radial-gradient(
           circle at center,
-          black 40%,
+          black 50%,
           transparent 100%
         );
       }
@@ -147,6 +147,12 @@
         transition: opacity 1s ease;
       }
 
+      .loader-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
       .loader-text {
         font-family: "Cinzel", serif;
         letter-spacing: 5px;
@@ -157,7 +163,7 @@
       }
 
       .loader-bar {
-        width: 200px;
+        width: 100%;
         height: 2px;
         background: #1a1a1a;
         position: relative;
@@ -374,7 +380,7 @@
         font-size: 24px;
         font-family: "Orbitron", sans-serif;
         font-weight: 500;
-        color: var(--white);
+        color: var(--primary-blue);
         transition: 0.3s;
         background: none;
         border: none;
@@ -394,9 +400,6 @@
         &:hover {
           transform: scale(1.1);
           color: var(--accent-orange);
-          img {
-            color: var(--accent-orange);
-          }
         }
       }
 
@@ -427,7 +430,7 @@
       /* Header */
       .header {
         position: fixed;
-        top: 0%;
+        top: 12px;
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
@@ -440,11 +443,15 @@
       }
       /* Logo Area */
       .brand-logo {
+        flex: 1;
         font-family: "Inter", sans-serif;
         font-weight: 700;
         font-size: 1.5rem;
         letter-spacing: 1px;
         color: #fff;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
       }
       .brand-logo span {
         color: var(--accent-orange);
@@ -456,43 +463,87 @@
         display: block;
       }
 
-      /* Top Right Utils */
-      .top-utils {
-        display: flex;
-        gap: 20px;
-        font-size: 0.85rem;
-        color: var(--text-muted);
-      }
-      .top-utils span {
-        cursor: pointer;
-        transition: 0.3s;
-      }
-      .top-utils span:hover {
-        color: #fff;
-      }
-
       /* Navigation */
-      .nav-bar {
+      .nav-container {
+        flex: 1;
         display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+      }
+      .nav-bar {
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
         gap: 30px;
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(0, 0, 0, 0.05);
         padding: 12px 30px;
-        border-radius: 30px;
+        border-radius: 0px;
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--accent-orange);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        transition: 0.3s;
+        position: relative;
+        clip-path: polygon(
+          15px 0px,
+          100% 0px,
+          100% calc(100% - 15px),
+          calc(100% - 15px) 100%,
+          0px 100%,
+          0px 15px
+        );
+
+        &::before {
+          background-color: var(--accent-orange);
+          content: "";
+          display: block;
+          height: 1px;
+          position: absolute;
+          right: -4px;
+          bottom: 5px;
+          transform: rotate(-45deg);
+          width: 25px;
+          box-shadow: -4px 4px 10px rgba(0, 140, 255, 0.5);
+        }
+        &::after {
+          background-color: var(--accent-orange);
+          content: "";
+          display: block;
+          height: 1px;
+          position: absolute;
+          left: -4px;
+          top: 5px;
+          transform: rotate(-45deg);
+          width: 25px;
+          box-shadow: -4px 4px 10px rgba(0, 140, 255, 0.5);
+        }
+        &:hover {
+          box-shadow: -4px 4px 10px rgba(0, 140, 255, 0.5);
+        }
+        &:hover::before {
+          border-top-color: rgba(0, 140, 255, 0.5);
+          border-left-color: rgba(0, 140, 255, 0.5);
+        }
+        &:hover::after {
+          border-bottom-color: rgba(0, 140, 255, 0.5);
+          border-right-color: rgba(0, 140, 255, 0.5);
+        }
       }
 
       .nav-item {
         position: relative;
-        overflow: hidden;
-        color: var(--text-muted);
-        font-size: 0.9rem;
+        color: var(--white);
+        opacity: 0.8;
+        font-size: 18px;
+        font-weight: 500;
         text-decoration: none;
         transition: 0.3s;
         &::after {
           content: "";
           position: absolute;
-          bottom: 0;
+          bottom: -5px;
           left: 0;
           width: 0%;
           height: 2px;
@@ -508,11 +559,53 @@
       .nav-item:hover {
         color: #fff;
         text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        opacity: 1;
       }
       .nav-active {
         color: #fff;
         border-bottom: 1px solid var(--primary-blue);
         padding-bottom: 2px;
+      }
+      /* Top Right Utils */
+      .nav-right {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 20px;
+        font-size: 15px;
+        color: var(--text-muted);
+        padding: 8px 0;
+      }
+      .lang-btn {
+        background: var(--accent-orange);
+        border: none;
+        border-radius: 8px;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 30px;
+        gap: 10px;
+        color: var(--bg-color);
+        font-weight: 500;
+      }
+      .top-utils {
+        display: flex;
+        gap: 20px;
+        font-size: 15px;
+        color: var(--text-muted);
+        padding: 4px 30px;
+      }
+      .top-utils span {
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .top-utils span:hover {
+        color: #fff;
       }
 
       /* Hero Content */
@@ -823,9 +916,11 @@
     <div class="grid-overlay"></div>
 
     <div id="intro-layer">
-      <div class="loader-text">WATCHSNET SECURITY</div>
-      <div class="loader-bar">
-        <div class="loader-progress"></div>
+      <div class="loader-content">
+        <div class="loader-text">WATCHSNET SECURITY</div>
+        <div class="loader-bar">
+          <div class="loader-progress"></div>
+        </div>
       </div>
     </div>
 
@@ -866,6 +961,7 @@
         <div class="brand-logo">
           <img src="images/logo.png" alt="WATCHSNET Logo" />
         </div>
+        <div class="nav-container">
         <nav class="nav-bar">
           <a href="#" class="nav-item">關於華鉅</a>
           <a href="#" class="nav-item">解決方案</a>
@@ -873,10 +969,16 @@
           <a href="#" class="nav-item">最新消息</a>
           <a href="#" class="nav-item">共契專區</a>
         </nav>
-        <div class="top-utils">
-          <span>聯絡我們</span>
-          <span>下載專區</span>
-          <span>經銷商系統</span>
+        </div>
+        <div class="nav-right">
+          <button class="lang-btn">
+            <span>中文</span>
+          </button>
+          <div class="top-utils">
+            <span>聯絡我們</span>
+            <span>下載專區</span>
+            <span>經銷商系統</span>
+          </div>
         </div>
       </div>
 
