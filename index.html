@@ -189,16 +189,19 @@
 
       /* --- Phase 2: Quiz Dashboard --- */
       #quiz-container {
-        position: absolute;
+        position: relative;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) translateY(50px);
-        width: 90%;
-        max-width: 600px;
+        width: 100%;
+        height: 100dvh;
         opacity: 0;
         pointer-events: none;
         transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
         z-index: 50;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       #quiz-container.active {
@@ -208,6 +211,7 @@
       }
 
       .dashboard-card {
+        max-width: 600px;
         background: var(--glass-bg);
         backdrop-filter: blur(20px);
         border: 1px solid var(--glass-border);
@@ -361,6 +365,41 @@
         transform: translateY(0);
       }
 
+      /* Exit Button */
+      .exit-button {
+        position: absolute;
+        bottom: 40px;
+        right: 40px;
+        z-index: 100;
+        font-size: 24px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 500;
+        color: var(--white);
+        transition: 0.3s;
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        img {
+          width: 24px;
+          height: 24px;
+          color: var(--white);
+        }
+        &:hover {
+          transform: scale(1.1);
+          color: var(--accent-orange);
+          img {
+            color: var(--accent-orange);
+          }
+        }
+      }
+
       /* --- Phase 4: Main Home Page (Updated Text) --- */
       #main-home {
         position: absolute;
@@ -385,11 +424,22 @@
         pointer-events: auto;
       }
 
+      /* Header */
+      .header {
+        position: fixed;
+        top: 0%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        padding: 24px 40px;
+        margin: 0 auto;
+      }
       /* Logo Area */
       .brand-logo {
-        position: absolute;
-        top: 40px;
-        left: 50px;
         font-family: "Inter", sans-serif;
         font-weight: 700;
         font-size: 1.5rem;
@@ -408,9 +458,6 @@
 
       /* Top Right Utils */
       .top-utils {
-        position: absolute;
-        top: 40px;
-        right: 50px;
         display: flex;
         gap: 20px;
         font-size: 0.85rem;
@@ -426,8 +473,6 @@
 
       /* Navigation */
       .nav-bar {
-        position: absolute;
-        top: 40px;
         display: flex;
         gap: 30px;
         background: rgba(255, 255, 255, 0.05);
@@ -478,6 +523,9 @@
         color: #fff;
         margin-bottom: 15px;
         line-height: 1.2;
+        @media (max-width: 768px) {
+          font-size: 1.5rem;
+        }
       }
 
       .hero-title em {
@@ -496,6 +544,9 @@
         letter-spacing: 2px;
         margin-bottom: 20px;
         text-transform: uppercase;
+        @media (max-width: 768px) {
+          font-size: 1rem;
+        }
       }
 
       .hero-subtitle-cn {
@@ -571,6 +622,9 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+        @media (max-width: 768px) {
+          display: none;
+        }
       }
 
       .deco-item .deco-text {
@@ -788,6 +842,10 @@
         </div>
         <div class="progress-bar" id="timer-bar" style="width: 100%"></div>
       </div>
+      <button class="exit-button">
+        <span>Escape</span>
+        <img src="images/exit.svg" alt="exit" />
+      </button>
     </div>
 
     <div id="transition-msg">
@@ -804,23 +862,23 @@
     </div>
 
     <div id="main-home">
-      <div class="brand-logo">
-        <img src="images/logo.png" alt="WATCHSNET Logo" />
+      <div class="header">
+        <div class="brand-logo">
+          <img src="images/logo.png" alt="WATCHSNET Logo" />
+        </div>
+        <nav class="nav-bar">
+          <a href="#" class="nav-item">關於華鉅</a>
+          <a href="#" class="nav-item">解決方案</a>
+          <a href="#" class="nav-item">合作案例</a>
+          <a href="#" class="nav-item">最新消息</a>
+          <a href="#" class="nav-item">共契專區</a>
+        </nav>
+        <div class="top-utils">
+          <span>聯絡我們</span>
+          <span>下載專區</span>
+          <span>經銷商系統</span>
+        </div>
       </div>
-
-      <div class="top-utils">
-        <span>聯絡我們</span>
-        <span>下載專區</span>
-        <span>經銷商系統</span>
-      </div>
-
-      <nav class="nav-bar">
-        <a href="#" class="nav-item">關於華鉅</a>
-        <a href="#" class="nav-item">解決方案</a>
-        <a href="#" class="nav-item">合作案例</a>
-        <a href="#" class="nav-item">最新消息</a>
-        <a href="#" class="nav-item">共契專區</a>
-      </nav>
 
       <h1 class="hero-title">Innovation For <em>Better Business !</em></h1>
       <h2 class="hero-subtitle-en">Smarter · Safer · Faster</h2>
@@ -896,7 +954,7 @@
       const timerBar = document.getElementById("timer-bar");
       const transitionMsg = document.getElementById("transition-msg");
       const mainHome = document.getElementById("main-home");
-
+      const exitButton = document.querySelector(".exit-button");
       // Logic
       window.addEventListener("load", () => {
         setTimeout(() => {
@@ -960,7 +1018,7 @@
         setTimeout(() => {
           currentQIndex++;
           loadQuestion(currentQIndex);
-        }, 800);
+        }, 500);
       }
 
       function handleTimeOut() {
@@ -983,6 +1041,17 @@
           }, 1000);
         }, 4000);
       }
+
+      function exitQuiz() {
+        quizContainer.classList.remove("active");
+        transitionMsg.classList.remove("active");
+        transitionMsg.style.display = "none";
+        mainHome.classList.add("active");
+      }
+
+      exitButton.addEventListener("click", () => {
+        exitQuiz();
+      });
     </script>
 
     <!-- Unicorn Studio Script -->
