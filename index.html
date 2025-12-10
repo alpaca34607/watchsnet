@@ -578,9 +578,9 @@
         padding: 8px 0;
       }
       .lang-btn {
-        background: var(--accent-orange);
-        border: none;
-        border-radius: 8px;
+        background: none;
+        border: 1px solid var(--accent-orange);
+        border-radius: 0px;
         padding: 0;
         margin: 0;
         cursor: pointer;
@@ -590,14 +590,25 @@
         align-items: center;
         padding: 4px 30px;
         gap: 10px;
-        color: var(--bg-color);
+        color: var(--accent-orange);
         font-weight: 500;
+        transition: 0.6s;
+        &:hover {
+          box-shadow: 0 0 10px var(--accent-orange);
+          background: var(--accent-orange);
+          color: var(--bg-color);
+        }
+        &:active {
+          box-shadow: 0 0 10px var(--accent-orange);
+          background: var(--accent-orange);
+          color: var(--bg-color);
+        }
       }
       .top-utils {
         display: flex;
         gap: 20px;
         font-size: 15px;
-        color: var(--text-muted);
+        color: var(--accent-orange);
         padding: 4px 30px;
       }
       .top-utils span {
